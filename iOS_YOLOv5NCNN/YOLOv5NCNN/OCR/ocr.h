@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "ncnn/ncnn/net.h"
 #include <math.h>
-#include "opencv2/opencv.hpp"
+#import "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "RRLib.h"

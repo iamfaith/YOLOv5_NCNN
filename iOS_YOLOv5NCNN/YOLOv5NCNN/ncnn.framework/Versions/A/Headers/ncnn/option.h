@@ -25,7 +25,7 @@ class PipelineCache;
 #endif // NCNN_VULKAN
 
 class Allocator;
-class Option
+class NCNN_EXPORT Option
 {
 public:
     // default option
@@ -87,10 +87,15 @@ public:
     // enable vulkan compute
     bool use_vulkan_compute;
 
+    // enable bf16 data type for storage
+    // improve most operator performance on all arm devices, may consume more memory
+    bool use_bf16_storage;
+
     // enable options for gpu inference
     bool use_fp16_packed;
     bool use_fp16_storage;
     bool use_fp16_arithmetic;
+    bool use_int8_packed;
     bool use_int8_storage;
     bool use_int8_arithmetic;
 
@@ -110,14 +115,33 @@ public:
 
     // turn on for adreno
     bool use_image_storage;
-
-    // enable bf16 data type for storage
-    // improve most operator performance on all arm devices, may consume more memory
-    bool use_bf16_storage;
+    bool use_tensor_storage;
 
     // used for fp16 weight storage in AVX
     // TODO drop this option
     bool use_weight_fp16_storage;
+
+    // enable DAZ(Denormals-Are-Zero) and FTZ(Flush-To-Zero)
+    // default value is 3
+    // 0 = DAZ OFF, FTZ OFF
+    // 1 = DAZ ON , FTZ OFF
+    // 2 = DAZ OFF, FTZ ON
+    // 3 = DAZ ON,  FTZ ON
+    int flush_denormals;
+
+    bool use_local_pool_allocator;
+
+    bool use_reserved_1;
+    bool use_reserved_2;
+    bool use_reserved_3;
+    bool use_reserved_4;
+    bool use_reserved_5;
+    bool use_reserved_6;
+    bool use_reserved_7;
+    bool use_reserved_8;
+    bool use_reserved_9;
+    bool use_reserved_10;
+    bool use_reserved_11;
 };
 
 } // namespace ncnn

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>ncnn</string>
+    <string>glslang</string>
     <key>CFBundleIdentifier</key>
-    <string>com.tencent.ncnn</string>
+    <string>org.khronos.glslang</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundleShortVersionString</key>

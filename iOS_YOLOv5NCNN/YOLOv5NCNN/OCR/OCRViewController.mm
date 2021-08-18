@@ -5,9 +5,8 @@
 //  Created by WZTENG on 2021/3/17.
 //  Copyright © 2021 TENG. All rights reserved.
 //
-
-#import "OCRViewController.h"
 #include "ocr.h"
+#import "OCRViewController.h"
 #include <numeric>
 
 @interface OCRViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate>

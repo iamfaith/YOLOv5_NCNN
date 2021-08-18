@@ -6,6 +6,10 @@
 //  Copyright © 2020 TENG. All rights reserved.
 //
 
+#ifdef __cplusplus
+#import <opencv2/opencv.hpp>
+#endif
+
 #import "ViewController.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>

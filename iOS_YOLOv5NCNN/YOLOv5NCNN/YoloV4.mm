@@ -11,11 +11,16 @@ bool YoloV4::toUseGPU = false;
 YoloV4 *YoloV4::detector = nullptr;
 
 YoloV4::YoloV4(bool useGPU, const int yoloType) {
+    int gpuCount = 0;
 #if NCNN_VULKAN
     ncnn::create_gpu_instance();
     hasGPU = ncnn::get_gpu_count() > 0;
+    gpuCount = ncnn::get_gpu_count();
 #endif
     toUseGPU = hasGPU && useGPU;
+    
+    NSLog(@"YOLOV5!!!!!!!!");
+    NSLog(@"GPU:%d", gpuCount);
     
     Net = new ncnn::Net();
     Net->opt.use_vulkan_compute = toUseGPU;
@@ -23,8 +28,8 @@ YoloV4::YoloV4(bool useGPU, const int yoloType) {
     NSString *parmaPath = nil;
     NSString *binPath = nil;
     if (yoloType == 0) {
-        parmaPath = [[NSBundle mainBundle] pathForResource:@"yolov4-tiny-opt" ofType:@"param"];
-        binPath = [[NSBundle mainBundle] pathForResource:@"yolov4-tiny-opt" ofType:@"bin"];
+        parmaPath = [[NSBundle mainBundle] pathForResource:@"yolov4-tiny-opt-s" ofType:@"param"];
+        binPath = [[NSBundle mainBundle] pathForResource:@"yolov4-tiny-opt-s" ofType:@"bin"];
     } else if (yoloType == 1) {
         parmaPath = [[NSBundle mainBundle] pathForResource:@"MobileNetV2-YOLOv3-Nano-coco" ofType:@"param"];
         binPath = [[NSBundle mainBundle] pathForResource:@"MobileNetV2-YOLOv3-Nano-coco" ofType:@"bin"];

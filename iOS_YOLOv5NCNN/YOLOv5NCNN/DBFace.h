@@ -5,6 +5,7 @@
 #ifndef YOLOV5_DBFACE_H
 #define YOLOV5_DBFACE_H
 
+#import <opencv2/opencv.hpp>
 #include <stdio.h>
 #include "ncnn/ncnn/net.h"
 #import <Foundation/Foundation.h>
@@ -16,7 +17,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
+
 #include <stdio.h>
 #include <vector>
 #include <algorithm>

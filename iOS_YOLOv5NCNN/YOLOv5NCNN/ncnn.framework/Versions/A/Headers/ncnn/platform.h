@@ -22,14 +22,26 @@
 #define NCNN_SIMPLESTL 0
 #define NCNN_THREADS 1
 #define NCNN_BENCHMARK 0
+#define NCNN_PLATFORM_API 1
 #define NCNN_PIXEL 1
 #define NCNN_PIXEL_ROTATE 1
 #define NCNN_PIXEL_AFFINE 1
-#define NCNN_VULKAN 0
-#define NCNN_REQUANT 0
+#define NCNN_PIXEL_DRAWING 1
+#define NCNN_VULKAN 1
 #define NCNN_RUNTIME_CPU 1
 #define NCNN_AVX2 0
+#define NCNN_AVX 0
 #define NCNN_ARM82 1
+#define NCNN_ARM82DOT 1
+#define NCNN_MSA 0
+#define NCNN_MMI 0
+#define NCNN_RVV 0
+#define NCNN_INT8 1
+#define NCNN_BF16 1
+
+#define NCNN_VERSION_STRING "1.0.21.07.20"
+
+#include "ncnn_export.h"
 
 #ifdef __cplusplus
 
@@ -51,7 +63,7 @@ namespace ncnn {
 
 #if NCNN_THREADS
 #if (defined _WIN32 && !(defined __MINGW32__))
-class Mutex
+class NCNN_EXPORT Mutex
 {
 public:
     Mutex() { InitializeSRWLock(&srwlock); }
@@ -64,7 +76,7 @@ private:
     SRWLOCK srwlock;
 };
 
-class ConditionVariable
+class NCNN_EXPORT ConditionVariable
 {
 public:
     ConditionVariable() { InitializeConditionVariable(&condvar); }
@@ -77,7 +89,7 @@ private:
 };
 
 static unsigned __stdcall start_wrapper(void* args);
-class Thread
+class NCNN_EXPORT Thread
 {
 public:
     Thread(void* (*start)(void*), void* args = 0) { _start = start; _args = args; handle = (HANDLE)_beginthreadex(0, 0, start_wrapper, this, 0, 0); }
@@ -95,7 +107,7 @@ private:
     void* _args;
 };
 
-class ThreadLocalStorage
+class NCNN_EXPORT ThreadLocalStorage
 {
 public:
     ThreadLocalStorage() { key = TlsAlloc(); }
@@ -106,7 +118,7 @@ private:
     DWORD key;
 };
 #else // (defined _WIN32 && !(defined __MINGW32__))
-class Mutex
+class NCNN_EXPORT Mutex
 {
 public:
     Mutex() { pthread_mutex_init(&mutex, 0); }
@@ -118,7 +130,7 @@ private:
     pthread_mutex_t mutex;
 };
 
-class ConditionVariable
+class NCNN_EXPORT ConditionVariable
 {
 public:
     ConditionVariable() { pthread_cond_init(&cond, 0); }
@@ -130,7 +142,7 @@ private:
     pthread_cond_t cond;
 };
 
-class Thread
+class NCNN_EXPORT Thread
 {
 public:
     Thread(void* (*start)(void*), void* args = 0) { pthread_create(&t, 0, start, args); }
@@ -140,7 +152,7 @@ private:
     pthread_t t;
 };
 
-class ThreadLocalStorage
+class NCNN_EXPORT ThreadLocalStorage
 {
 public:
     ThreadLocalStorage() { pthread_key_create(&key, 0); }
@@ -152,7 +164,7 @@ private:
 };
 #endif // (defined _WIN32 && !(defined __MINGW32__))
 #else // NCNN_THREADS
-class Mutex
+class NCNN_EXPORT Mutex
 {
 public:
     Mutex() {}
@@ -161,7 +173,7 @@ public:
     void unlock() {}
 };
 
-class ConditionVariable
+class NCNN_EXPORT ConditionVariable
 {
 public:
     ConditionVariable() {}
@@ -171,7 +183,7 @@ public:
     void signal() {}
 };
 
-class Thread
+class NCNN_EXPORT Thread
 {
 public:
     Thread(void* (*/*start*/)(void*), void* /*args*/ = 0) {}
@@ -179,17 +191,19 @@ public:
     void join() {}
 };
 
-class ThreadLocalStorage
+class NCNN_EXPORT ThreadLocalStorage
 {
 public:
-    ThreadLocalStorage() {}
+    ThreadLocalStorage() { data = 0; }
     ~ThreadLocalStorage() {}
-    void set(void* /*value*/) {}
-    void* get() { return 0; }
+    void set(void* value) { data = value; }
+    void* get() { return data; }
+private:
+    void* data;
 };
 #endif // NCNN_THREADS
 
-class MutexLockGuard
+class NCNN_EXPORT MutexLockGuard
 {
 public:
     MutexLockGuard(Mutex& _mutex) : mutex(_mutex) { mutex.lock(); }
@@ -212,16 +226,16 @@ private:
 #endif // __cplusplus
 
 #if NCNN_STDIO
-#if __ANDROID_API__ >= 8
+#if NCNN_PLATFORM_API && __ANDROID_API__ >= 8
 #include <android/log.h>
 #define NCNN_LOGE(...) do { \
     fprintf(stderr, ##__VA_ARGS__); fprintf(stderr, "\n"); \
     __android_log_print(ANDROID_LOG_WARN, "ncnn", ##__VA_ARGS__); } while(0)
-#else // __ANDROID_API__ >= 8
+#else // NCNN_PLATFORM_API && __ANDROID_API__ >= 8
 #include <stdio.h>
 #define NCNN_LOGE(...) do { \
     fprintf(stderr, ##__VA_ARGS__); fprintf(stderr, "\n"); } while(0)
-#endif // __ANDROID_API__ >= 8
+#endif // NCNN_PLATFORM_API && __ANDROID_API__ >= 8
 #else
 #define NCNN_LOGE(...)
 #endif
